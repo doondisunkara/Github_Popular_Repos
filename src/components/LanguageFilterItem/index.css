@@ -1,0 +1,19 @@
+.language-item {
+  margin: 10px;
+}
+
+.item-btn {
+  border: 0px solid;
+  background-color: transparent;
+  color: #0f172a;
+  font-family: 'Roboto';
+  font-size: 20px;
+  font-weight: 800;
+  padding: 6px 20px 6px 20px;
+}
+
+.active {
+  border: 1px solid #0284c7;
+  color: #0284c7;
+  border-radius: 18px;
+}
