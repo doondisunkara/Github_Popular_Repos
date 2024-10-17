@@ -1,6 +1,8 @@
 import {Component} from 'react'
+import Loader from 'react-loader-spinner'
 
 import LanguageFilterItem from '../LanguageFilterItem'
+import RepositoryItem from '../RepositoryItem'
 import './index.css'
 
 const languageFiltersData = [
@@ -12,14 +14,14 @@ const languageFiltersData = [
 ]
 
 const apiStatusConstants = {
-  loading: 'LOADING',
+  inProgress: 'IN_PROGRESS',
   success: 'SUCCESS',
   failure: 'FAILURE',
 }
 
 class GithubPopularRepos extends Component {
   state = {
-    apiStatus: apiStatusConstants.loading,
+    apiStatus: apiStatusConstants.inProgress,
     activeLanguageId: languageFiltersData[0].id,
     repositoryItemList: [],
   }
@@ -32,23 +34,59 @@ class GithubPopularRepos extends Component {
     const {activeLanguageId} = this.state
     const apiUrl = `https://apis.ccbp.in/popular-repos?language=${activeLanguageId}`
     const response = await fetch(apiUrl)
-    const data = await response.json()
-    const updatedData = data.popular_repos
-    this.setState({
-      repositoryItemList: updatedData.map(each => ({
-        id: each.id,
-        name: each.name,
-        avatarUrl: each.avatar_url,
-        starsCount: each.stars_count,
-        forksCount: each.forks_count,
-        issuesCount: each.issues_count,
-      })),
-    })
+    if (response.ok) {
+      const data = await response.json()
+      const updatedData = data.popular_repos
+      this.setState({
+        repositoryItemList: updatedData.map(each => ({
+          id: each.id,
+          name: each.name,
+          avatarUrl: each.avatar_url,
+          starsCount: each.stars_count,
+          forksCount: each.forks_count,
+          issuesCount: each.issues_count,
+        })),
+        apiStatus: apiStatusConstants.success,
+      })
+    } else {
+      this.setState({apiStatus: apiStatusConstants.failure})
+    }
   }
 
   updateActiveLanguageId = activeLanguageId => {
-    this.setState({activeLanguageId}, this.getRepositoryItemsList)
+    this.setState(
+      {activeLanguageId, apiStatus: apiStatusConstants.inProgress},
+      this.getRepositoryItemsList,
+    )
   }
+
+  renderSuccessView = () => {
+    const {repositoryItemList} = this.state
+    return (
+      <ul className="repository-item-container">
+        {repositoryItemList.map(each => (
+          <RepositoryItem repositoryItemDetails={each} key={each.id} />
+        ))}
+      </ul>
+    )
+  }
+
+  renderLoadingView = () => (
+    <div data-testid="loader">
+      <Loader type="ThreeDots" color="#0284c7" height={80} width={80} />
+    </div>
+  )
+
+  renderFailureView = () => (
+    <div className="failure-view-container">
+      <img
+        className="failure-img"
+        src="https://assets.ccbp.in/frontend/react-js/api-failure-view.png"
+        alt="failure view"
+      />
+      <h1 className="failure-title">Something went wrong</h1>
+    </div>
+  )
 
   renderReposComponent = () => {
     const {apiStatus} = this.state
@@ -58,7 +96,7 @@ class GithubPopularRepos extends Component {
       case apiStatusConstants.failure:
         return this.renderFailureView()
       default:
-        return this.loadingView()
+        return this.renderLoadingView()
     }
   }
 

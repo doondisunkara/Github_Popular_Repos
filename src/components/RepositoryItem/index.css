@@ -1,1 +1,69 @@
-/* Write your CSS here */
+.repo-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 0px solid;
+  border-radius: 22px;
+  background-color: #f8f8ff;
+  padding: 30px;
+  margin: 10px;
+  width: 30%;
+}
+
+@media screen and (max-width: 767px) {
+  .repo-item {
+    width: 100%;
+  }
+}
+
+.repo-avatar {
+  width: 150px;
+}
+
+@media screen and (max-width: 767px) {
+  .repo-avatar {
+    width: 85px;
+  }
+}
+
+.repo-name {
+  color: #e73959;
+  font-family: 'Roboto';
+  font-size: 36px;
+  font-weight: 600;
+}
+
+@media screen and (max-width: 767px) {
+  .repo-name {
+    font-size: 24px;
+  }
+}
+
+.repo-details-container {
+  align-self: flex-start;
+}
+
+.repo-details-item {
+  display: flex;
+  align-items: center;
+  margin: 10px;
+}
+
+.repo-icon {
+  width: 20px;
+  margin-right: 20px;
+}
+
+.repo-details-count {
+  color: #1e293b;
+  font-family: 'Roboto';
+  font-size: 18px;
+  font-weight: 500;
+  margin: 0px;
+}
+
+@media screen and (max-width: 767px) {
+  .repo-details-count {
+    font-size: 14px;
+  }
+}
